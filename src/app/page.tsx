@@ -1,3 +1,7 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
 const faqData = [
   {
     question: "Em quanto tempo eu irei receber meu acesso?",
@@ -11,7 +15,32 @@ const faqData = [
   },
 ];
 
+function getUrgencyDates() {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const twoDaysAgo = new Date(today);
+  twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+  const formatDate = (date: Date) => {
+    return date.getDate();
+  };
+
+  return {
+    day1: formatDate(twoDaysAgo),
+    day2: formatDate(yesterday),
+    day3: formatDate(today),
+    month: today.toLocaleDateString('pt-BR', { month: 'long' }),
+    monthCapitalized: today.toLocaleDateString('pt-BR', { month: 'long' }).charAt(0).toUpperCase() + today.toLocaleDateString('pt-BR', { month: 'long' }).slice(1)
+  };
+}
+
 export default function Home() {
+  const [urgencyDates, setUrgencyDates] = useState({ day1: 0, day2: 0, day3: 0, month: '', monthCapitalized: '' });
+
+  useEffect(() => {
+    setUrgencyDates(getUrgencyDates());
+  }, []);
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -59,6 +88,25 @@ export default function Home() {
                 />
               </div>
             </div>
+
+            {/* BANNER DE PREÇO */}
+            <div className="my-8 bg-white rounded-2xl shadow-2xl p-8 max-w-2xl mx-auto border-4 border-rose-500">
+              <div className="text-center">
+                <p className="text-4xl md:text-5xl font-bold text-red-600 mb-2">
+                  DE <span className="line-through">R$97,00</span>
+                </p>
+                <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  POR APENAS
+                </p>
+                <p className="text-6xl md:text-7xl font-bold text-green-600 mb-4">
+                  R$10
+                </p>
+                <p className="text-3xl md:text-4xl font-bold text-gray-900">
+                  ÚLTIMO DIA!
+                </p>
+              </div>
+            </div>
+
             <a
               href="#oferta"
               className="bg-rose-600 hover:bg-rose-700 text-white font-bold py-4 px-8 rounded-full text-lg inline-block transition-all transform hover:scale-105"
@@ -263,7 +311,7 @@ export default function Home() {
         <section className="py-12 px-4 bg-yellow-100 border-y-4 border-yellow-400">
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-2xl md:text-3xl font-bold text-gray-900">
-              ⏰ Comprando nos dias: <span className="text-rose-600">24, 25 e 26 de Outubro</span> você ganha alguns bônus extras.
+              ⏰ Comprando nos dias: <span className="text-rose-600">{urgencyDates.day1}, {urgencyDates.day2} e {urgencyDates.day3} de {urgencyDates.monthCapitalized}</span> você ganha alguns bônus extras.
             </p>
           </div>
         </section>
@@ -471,7 +519,9 @@ export default function Home() {
                     <p className="text-lg text-gray-600">ou 5x de R$ 8,05</p>
                   </div>
                   <a
-                    href="#"
+                    href="https://pay.kiwify.com.br/F1dZPQu"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-6 rounded-xl text-center transition-all text-lg"
                   >
                     SIM! QUERO O PLANO COMPLETO!
@@ -520,7 +570,7 @@ export default function Home() {
         <section className="py-16 px-4 bg-gray-50">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-8">
-              Legal… mas se é tão bom, por que está tão barato?
+              Legal… mas se é tão bom, <span className="text-red-600">por que está tão barato?</span>
             </h2>
             <div className="text-lg text-gray-700 space-y-4">
               <p>
@@ -575,7 +625,7 @@ export default function Home() {
               <div className="order-2 md:order-1">
                 <div className="text-lg text-gray-700 space-y-4">
                   <p>
-                    Eu sou a <strong>Aline</strong>… Essa noivinha na foto rsrs
+                    Eu sou a <strong>Priscila</strong>… Essa noivinha na foto rsrs
                   </p>
                   <p>
                     E em 2022 eu me casei com exatamente <strong>6.697,70</strong>, mesmo tendo <strong>150 convidados!</strong>
@@ -595,10 +645,7 @@ export default function Home() {
                   <p className="text-sm italic">
                     (ao invés de organizar os casamentos, ensino milhares de noivinhas a fazerem o próprio casamento gastando pouco)…
                   </p>
-                  <p className="font-bold">
-                    Depois me segue no Insta <span className="text-rose-600">@casamentoeconomico_</span>
-                  </p>
-                  <p className="font-bold text-xl">
+                  <p className="font-bold text-xl mt-4">
                     Fuii… Te espero na área de membros!
                   </p>
                 </div>
@@ -606,7 +653,7 @@ export default function Home() {
               <div className="order-1 md:order-2">
                 <img
                   src="https://i.postimg.cc/4ybJMw2j/image.png"
-                  alt="Aline - Autora do Casamento Econômico"
+                  alt="Priscila - Autora do Casamento Econômico"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
               </div>
