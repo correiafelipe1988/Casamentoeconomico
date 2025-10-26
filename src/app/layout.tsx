@@ -3,21 +3,21 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Casamento Econômico | Planeje seu Dia Especial Sem Gastar uma Fortuna",
+  title: "Seu Casamento com Menos de 7k | Casamento Econômico",
   description:
-    "Oferecemos planejamento de casamento completo e acessível para que seu grande dia seja inesquecível. Assessoria, decoração, e mais. Fale conosco!",
+    "O Guia Completo Para Um Casamento Perfeito & Econômico! Mesmo com pouco tempo e muitos convidados!",
   openGraph: {
-    title: "Casamento Econômico | Planeje seu Dia Especial Sem Gastar uma Fortuna",
+    title: "Seu Casamento com Menos de 7k | Casamento Econômico",
     description:
-      "Planejamento de casamento acessível para um dia inesquecível.",
+      "O Guia Completo Para Um Casamento Perfeito & Econômico! Mesmo com pouco tempo e muitos convidados!",
     url: "https://casamento-economico.com",
     siteName: "Casamento Econômico",
     images: [
       {
-        url: "https://picsum.photos/seed/og-image/1200/630",
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Casal feliz no dia do casamento",
+        alt: "Casamento Econômico - Guia Completo",
       },
     ],
     locale: "pt_BR",
