@@ -2,6 +2,94 @@
 
 import { useEffect, useState } from 'react';
 
+// Componente de notificação de compra
+function PurchaseNotification() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentName, setCurrentName] = useState('');
+  const [currentCity, setCurrentCity] = useState('');
+
+  const femaleNames = [
+    'Ana', 'Maria', 'Juliana', 'Fernanda', 'Camila', 'Beatriz', 'Carolina',
+    'Larissa', 'Amanda', 'Gabriela', 'Isabela', 'Mariana', 'Paula', 'Rafaela',
+    'Bianca', 'Letícia', 'Natália', 'Patrícia', 'Renata', 'Tatiana', 'Vanessa',
+    'Bruna', 'Carla', 'Débora', 'Jéssica', 'Lívia', 'Priscila', 'Roberta',
+    'Sabrina', 'Viviane', 'Adriana', 'Daniela', 'Luciana', 'Mônica', 'Simone'
+  ];
+
+  const cities = [
+    'São Paulo - SP', 'Rio de Janeiro - RJ', 'Belo Horizonte - MG',
+    'Brasília - DF', 'Curitiba - PR', 'Porto Alegre - RS', 'Salvador - BA',
+    'Fortaleza - CE', 'Recife - PE', 'Goiânia - GO', 'Campinas - SP',
+    'Santos - SP', 'Florianópolis - SC', 'Vitória - ES', 'Manaus - AM',
+    'Belém - PA', 'Natal - RN', 'João Pessoa - PB', 'Maceió - AL',
+    'São Luís - MA', 'Cuiabá - MT', 'Campo Grande - MS', 'Teresina - PI'
+  ];
+
+  useEffect(() => {
+    const showNotification = () => {
+      const randomName = femaleNames[Math.floor(Math.random() * femaleNames.length)];
+      const randomCity = cities[Math.floor(Math.random() * cities.length)];
+
+      setCurrentName(randomName);
+      setCurrentCity(randomCity);
+      setIsVisible(true);
+
+      // Esconder após 5 segundos
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 5000);
+    };
+
+    // Mostrar primeira notificação após 3 segundos
+    const initialTimeout = setTimeout(showNotification, 3000);
+
+    // Mostrar notificações a cada 15 segundos
+    const interval = setInterval(showNotification, 15000);
+
+    return () => {
+      clearTimeout(initialTimeout);
+      clearInterval(interval);
+    };
+  }, []);
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="fixed bottom-6 left-6 z-50 animate-slide-in">
+      <div className="bg-green-500 text-white rounded-lg shadow-2xl p-4 max-w-sm border-2 border-green-600">
+        <div className="flex items-start gap-3">
+          <div className="bg-white rounded-full p-2 flex-shrink-0">
+            <svg
+              className="w-6 h-6 text-green-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="font-bold text-lg">
+              {currentName} acabou de comprar!
+            </p>
+            <p className="text-sm text-green-50">
+              {currentCity}
+            </p>
+            <p className="text-xs text-green-100 mt-1">
+              há alguns segundos
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const faqData = [
   {
     question: "Em quanto tempo eu irei receber meu acesso?",
@@ -56,6 +144,8 @@ export default function Home() {
 
   return (
     <>
+      <PurchaseNotification />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
@@ -182,15 +272,15 @@ export default function Home() {
 
         {/* PROVA/AUTORIDADE */}
         <section className="py-16 px-4 bg-white">
-          <div className="max-w-3xl mx-auto text-center text-lg md:text-xl text-gray-700 space-y-4">
-            <p>
-              Esse é exatamente o <strong>MESMO processo</strong> que eu e minhas noivinhas usamos para fazer casamentos dos sonhos por menos de 7K reais.
+          <div className="max-w-3xl mx-auto text-center text-lg md:text-xl text-gray-700 space-y-6">
+            <p className="text-xl md:text-2xl leading-relaxed">
+              Esse é exatamente o <strong className="text-2xl md:text-3xl text-rose-600">MESMO processo</strong> que eu e minhas noivinhas usamos para fazer <strong className="text-xl md:text-2xl">casamentos dos sonhos por menos de 7K reais.</strong>
             </p>
-            <p>
-              Esse é um processo que apesar de ser muito valioso e secreto é <strong>MUITO SIMPLES</strong> de ser replicado.
+            <p className="text-xl md:text-2xl leading-relaxed">
+              Esse é um processo que apesar de ser muito valioso e secreto é <strong className="text-2xl md:text-3xl text-green-600">MUITO SIMPLES</strong> de ser replicado.
             </p>
-            <p>
-              E ainda, você poderá fazer isso sem precisar de nenhum conhecimento na área de eventos.
+            <p className="text-xl md:text-2xl leading-relaxed">
+              E ainda, você poderá fazer isso <strong className="text-xl md:text-2xl underline">sem precisar de nenhum conhecimento</strong> na área de eventos.
             </p>
           </div>
         </section>
@@ -541,18 +631,18 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-8">
               Não leu tudo? Vou Resumir para Você…
             </h2>
-            <div className="text-lg text-gray-700 space-y-4 mb-8">
-              <p>
-                O <strong>Casamento Econômico</strong> é um guia completo que vai te ensinar como fazer um casamento incrível por menos de 7 mil reais.
+            <div className="text-lg md:text-xl text-gray-700 space-y-6 mb-8">
+              <p className="text-xl md:text-2xl">
+                O <strong className="text-2xl md:text-3xl text-rose-600">Casamento Econômico</strong> é um guia completo que vai te ensinar como fazer um <strong className="text-xl md:text-2xl">casamento incrível por menos de 7 mil reais.</strong>
               </p>
-              <p>
-                Você vai aprender os segredos que o mercado esconde, como escolher a data perfeita, fazer um buffet econômico e delicioso, organizar tudo sem assessoria e muito mais!
+              <p className="text-lg md:text-xl">
+                Você vai aprender os segredos que o mercado esconde, como <strong>escolher a data perfeita</strong>, fazer um <strong>buffet econômico e delicioso</strong>, <strong>organizar tudo sem assessoria</strong> e muito mais!
               </p>
-              <p>
-                Além disso, você ganha 5 bônus incríveis que vão facilitar ainda mais toda a organização do seu grande dia.
+              <p className="text-lg md:text-xl">
+                Além disso, você ganha <strong className="text-xl md:text-2xl text-rose-600">5 bônus incríveis</strong> que vão facilitar ainda mais toda a organização do seu grande dia.
               </p>
-              <p className="font-bold text-xl text-rose-600">
-                E tudo isso por apenas R$ 37 (ou R$ 10 no plano básico).
+              <p className="font-bold text-2xl md:text-3xl text-green-700 bg-green-100 p-4 rounded-lg border-2 border-green-500">
+                E tudo isso por apenas <span className="text-3xl md:text-4xl">R$ 37</span> (ou <span className="text-3xl md:text-4xl">R$ 10</span> no plano básico).
               </p>
             </div>
             <div className="text-center">
@@ -572,23 +662,23 @@ export default function Home() {
             <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-8">
               Legal… mas se é tão bom, <span className="text-red-600">por que está tão barato?</span>
             </h2>
-            <div className="text-lg text-gray-700 space-y-4">
-              <p>
+            <div className="text-lg md:text-xl text-gray-700 space-y-6">
+              <p className="text-xl md:text-2xl font-semibold">
                 Ótima pergunta! E a resposta é simples:
               </p>
-              <p>
-                Meu objetivo não é ficar rica vendendo esse produto (apesar de que seria legal haha).
+              <p className="text-lg md:text-xl">
+                Meu objetivo não é ficar rica vendendo esse produto <span className="italic">(apesar de que seria legal haha)</span>.
               </p>
-              <p>
-                Meu objetivo é ajudar o MÁXIMO de pessoas possível a realizarem o sonho do casamento sem se endividar ou gastar todas as economias.
+              <p className="text-xl md:text-2xl">
+                Meu objetivo é ajudar o <strong className="text-2xl md:text-3xl text-rose-600">MÁXIMO de pessoas possível</strong> a realizarem o sonho do casamento <strong className="text-xl md:text-2xl">sem se endividar ou gastar todas as economias.</strong>
               </p>
-              <p>
-                Eu já passei por isso, sei como é difícil. E quando descobri esses segredos, tudo ficou mais fácil.
+              <p className="text-lg md:text-xl">
+                Eu já passei por isso, sei como é difícil. E quando descobri esses segredos, <strong>tudo ficou mais fácil.</strong>
               </p>
-              <p>
-                Por isso decidi cobrar um valor simbólico que qualquer pessoa possa pagar. Porque eu realmente quero que você tenha acesso a essas informações.
+              <p className="text-xl md:text-2xl">
+                Por isso decidi cobrar um <strong className="text-2xl md:text-3xl text-green-600">valor simbólico</strong> que qualquer pessoa possa pagar. Porque eu <strong>realmente quero</strong> que você tenha acesso a essas informações.
               </p>
-              <p className="font-bold text-xl">
+              <p className="font-bold text-2xl md:text-3xl text-gray-900 bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500">
                 Sem pegadinhas, sem letras miúdas ou nada do tipo.
               </p>
             </div>
