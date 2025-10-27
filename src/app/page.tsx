@@ -161,13 +161,17 @@ export default function Home() {
         }}>
           <div className="absolute inset-0 bg-gradient-to-b from-blue-100/70 to-white/90"></div>
           <div className="max-w-4xl mx-auto text-center relative z-10">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-lg" style={{
-              textShadow: '2px 2px 4px rgba(0,0,0,0.3)'
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-white mb-6 drop-shadow-lg leading-tight" style={{
+              textShadow: '3px 3px 6px rgba(0,0,0,0.4)'
             }}>
-              Seu Casamento com Menos de 7k
+              <span className="block">Casamento Perfeito</span>
+              <span className="block text-green-400 text-5xl md:text-6xl lg:text-7xl">Gastando MENOS de R$ 7.000!</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-900 mb-12 leading-relaxed font-semibold">
-              O Guia Completo Para Um Casamento Perfeito & Econômico! Mesmo com pouco tempo e muitos convidados!
+            <p className="text-2xl md:text-3xl text-gray-900 mb-8 leading-relaxed font-bold bg-white/90 p-4 rounded-xl shadow-xl">
+              ✨ Sem se endividar. Sem desespero. Sem abrir mão do seu sonho! ✨
+            </p>
+            <p className="text-xl md:text-2xl text-gray-800 font-semibold mb-12">
+              O método COMPLETO para você ter um casamento INCRÍVEL com até 150 convidados, mesmo com pouco tempo e orçamento!
             </p>
             <div className="my-12">
               <div className="max-w-2xl mx-auto">
@@ -612,6 +616,15 @@ export default function Home() {
                     href="https://pay.kiwify.com.br/F1dZPQu"
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => {
+                      if (typeof window !== 'undefined' && (window as any).fbq) {
+                        (window as any).fbq('track', 'InitiateCheckout', {
+                          value: 37.00,
+                          currency: 'BRL',
+                          content_name: 'Casamento Econômico - Plano Completo'
+                        });
+                      }
+                    }}
                     className="block w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-6 rounded-xl text-center transition-all text-lg"
                   >
                     SIM! QUERO O PLANO COMPLETO!
