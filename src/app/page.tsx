@@ -1,6 +1,107 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
+
+// Componente de Carrossel de Depoimentos
+function TestimonialsCarousel() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'center' });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const testimonials = [
+    {
+      image: 'https://i.postimg.cc/kg111Y1y/image.png',
+      alt: 'Depoimento 1 - Cliente economizou 4 mil reais'
+    },
+    {
+      image: 'https://i.postimg.cc/CKWzNYjK/image.png',
+      alt: 'Depoimento 2 - Cliente satisfeita'
+    },
+    {
+      image: 'https://i.postimg.cc/DwLDZPxh/image.png',
+      alt: 'Depoimento 3 - Cliente recomenda'
+    }
+  ];
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    const onSelect = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+    };
+
+    emblaApi.on('select', onSelect);
+    onSelect();
+
+    // Autoplay manual
+    const interval = setInterval(() => {
+      emblaApi.scrollNext();
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi]);
+
+  const scrollTo = (index: number) => {
+    if (emblaApi) emblaApi.scrollTo(index);
+  };
+
+  return (
+    <div className="relative">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {testimonials.map((testimonial, index) => (
+            <div key={index} className="flex-[0_0_100%] min-w-0 px-4">
+              <img
+                src={testimonial.image}
+                alt={testimonial.alt}
+                className="w-full h-auto rounded-2xl shadow-2xl"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Dots de navegação */}
+      <div className="flex justify-center gap-2 mt-6">
+        {testimonials.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => scrollTo(index)}
+            className={`w-3 h-3 rounded-full transition-all ${
+              index === selectedIndex
+                ? 'bg-pink-600 w-8'
+                : 'bg-gray-300 hover:bg-gray-400'
+            }`}
+            aria-label={`Ir para depoimento ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Botões de navegação */}
+      <button
+        onClick={() => emblaApi?.scrollPrev()}
+        className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-all hover:scale-110"
+        aria-label="Depoimento anterior"
+      >
+        <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button
+        onClick={() => emblaApi?.scrollNext()}
+        className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-all hover:scale-110"
+        aria-label="Próximo depoimento"
+      >
+        <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  );
+}
 
 // Componente de notificação de compra
 function PurchaseNotification() {
@@ -161,17 +262,42 @@ export default function Home() {
         }}>
           <div className="absolute inset-0 bg-gradient-to-b from-blue-100/70 to-white/90"></div>
           <div className="max-w-4xl mx-auto text-center relative z-10">
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-white mb-6 drop-shadow-lg leading-tight" style={{
+            <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold mb-8 drop-shadow-lg leading-tight" style={{
               textShadow: '3px 3px 6px rgba(0,0,0,0.4)'
             }}>
-              <span className="block">Casamento Perfeito</span>
-              <span className="block text-green-400 text-5xl md:text-6xl lg:text-7xl">Gastando MENOS de R$ 7.000!</span>
+              <span className="block">
+                <span className="text-pink-500">🩷</span>{' '}
+                <span className="text-white">Eu tive o </span>
+                <span className="text-pink-400">casamento dos meus sonhos</span>
+                <span className="text-white"> com </span>
+                <span className="text-yellow-300 font-black">150 convidados</span>
+                <span className="text-white"> gastando só </span>
+                <span className="text-green-400 font-black text-5xl md:text-6xl lg:text-7xl">R$6.697,70</span>
+                <span className="text-white"> — e agora ensino </span>
+                <span className="text-pink-400">noivinhas</span>
+                <span className="text-white"> a fazer o mesmo!</span>
+              </span>
             </h1>
-            <p className="text-2xl md:text-3xl text-gray-900 mb-8 leading-relaxed font-bold bg-white/90 p-4 rounded-xl shadow-xl">
-              ✨ Sem se endividar. Sem desespero. Sem abrir mão do seu sonho! ✨
-            </p>
-            <p className="text-xl md:text-2xl text-gray-800 font-semibold mb-12">
-              O método COMPLETO para você ter um casamento INCRÍVEL com até 150 convidados, mesmo com pouco tempo e orçamento!
+            <p className="text-xl md:text-2xl font-semibold mb-12 leading-relaxed bg-white/90 p-6 rounded-xl shadow-xl">
+              <span className="text-yellow-500">💡</span>{' '}
+              <span className="text-gray-900">Mesmo com </span>
+              <span className="text-red-600 font-bold">pouco dinheiro</span>
+              <span className="text-gray-900">, </span>
+              <span className="text-red-600 font-bold">pouco tempo</span>
+              <span className="text-gray-900"> e </span>
+              <span className="text-red-600 font-bold">zero experiência</span>
+              <span className="text-gray-900">,</span>
+              <br />
+              <span className="text-gray-900">você pode ter um </span>
+              <span className="text-pink-600 font-bold">casamento lindo, completo e inesquecível</span>
+              <span className="text-gray-900"> —</span>
+              <br />
+              <span className="text-green-700 font-bold">sem dívidas</span>
+              <span className="text-gray-900">, </span>
+              <span className="text-green-700 font-bold">sem vergonha</span>
+              <span className="text-gray-900"> e </span>
+              <span className="text-green-700 font-bold">sem abrir mão do seu sonho</span>
+              <span className="text-gray-900">.</span>
             </p>
             <div className="my-12">
               <div className="max-w-2xl mx-auto">
@@ -180,6 +306,40 @@ export default function Home() {
                   alt="Casamento Econômico - Guia Completo"
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
+              </div>
+            </div>
+
+            {/* NOVA SEÇÃO: O QUE VOCÊ VAI DESCOBRIR */}
+            <div className="my-12 bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl shadow-xl p-8 md:p-12 max-w-4xl mx-auto border-2 border-pink-200">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-center mb-10">
+                <span className="text-yellow-500 text-5xl">✨</span>{' '}
+                <span className="text-gray-900">O QUE VOCÊ VAI DESCOBRIR</span>
+              </h2>
+
+              <p className="text-xl md:text-2xl lg:text-3xl text-gray-800 leading-relaxed mb-8 text-center">
+                <span className="text-gray-900">Você vai aprender o </span>
+                <span className="text-pink-600 font-bold">método usado por dezenas de noivas reais</span>
+                <br />
+                <span className="text-gray-900">que transformaram orçamentos de </span>
+                <span className="text-red-600 font-bold line-through text-2xl md:text-3xl">R$25.000</span>
+                <span className="text-gray-900"> em casamentos de </span>
+                <span className="text-green-600 font-bold text-3xl md:text-4xl lg:text-5xl">menos de R$7.000</span>
+                <span className="text-gray-900"> —</span>
+                <br />
+                <span className="text-gray-900">com </span>
+                <span className="text-purple-600 font-semibold">vestido, buffet, decoração, fotografia</span>
+                <span className="text-gray-900"> e tudo o que sempre sonharam.</span>
+              </p>
+
+              <div className="bg-yellow-50 border-l-4 border-yellow-500 p-8 rounded-lg mt-10">
+                <p className="text-xl md:text-2xl lg:text-3xl text-gray-800 leading-relaxed">
+                  <span className="text-yellow-600 text-3xl md:text-4xl">🔒</span>{' '}
+                  <span className="text-gray-900 font-semibold">O mercado de casamentos </span>
+                  <span className="text-red-600 font-bold">não quer que você saiba isso.</span>
+                  <br />
+                  <span className="text-gray-900">Porque quando você aprende os segredos, você </span>
+                  <span className="text-green-700 font-bold">economiza o suficiente pra pagar a lua de mel.</span>
+                </p>
               </div>
             </div>
 
@@ -210,55 +370,106 @@ export default function Home() {
           </div>
         </section>
 
-        {/* BLOCO DE DÚVIDAS */}
+        {/* A VERDADE QUE NINGUÉM TE CONTA */}
         <section className="py-16 px-4 bg-white">
           <div className="max-w-4xl mx-auto">
-            <ul className="space-y-6 mb-10">
-              <li className="flex items-start">
-                <span className="text-red-500 mr-4 text-3xl flex-shrink-0">❓</span>
-                <span className="text-2xl md:text-3xl text-gray-800 font-semibold leading-relaxed">Como ter o casamento e a festa dos meus sonhos economizando?</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-red-500 mr-4 text-3xl flex-shrink-0">❓</span>
-                <span className="text-2xl md:text-3xl text-gray-800 font-semibold leading-relaxed">Quais são os elementos essenciais de um casamento?</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-red-500 mr-4 text-3xl flex-shrink-0">❓</span>
-                <span className="text-2xl md:text-3xl text-gray-800 font-semibold leading-relaxed">Como organizar tudo sem assessoria?</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-red-500 mr-4 text-3xl flex-shrink-0">❓</span>
-                <span className="text-2xl md:text-3xl text-gray-800 font-semibold leading-relaxed">Como preparar tudo em pouco tempo?</span>
-              </li>
-            </ul>
-            <p className="text-2xl md:text-3xl text-gray-900 text-center font-medium leading-relaxed">
-              Essas são as dúvidas que você provavelmente tem, e as respostas dessas e de várias outras perguntas é o que te fará economizar <strong className="text-red-600">MUITO…</strong>
-            </p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-center mb-10">
+              <span className="text-red-600 text-5xl">💣</span>{' '}
+              <span className="text-gray-900">A VERDADE QUE NINGUÉM TE CONTA</span>
+            </h2>
+
+            <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl shadow-xl p-8 md:p-12 border-2 border-red-200">
+              <p className="text-xl md:text-2xl lg:text-3xl text-gray-900 leading-relaxed text-center mb-8">
+                <span className="text-gray-900">Os orçamentos absurdos que você recebeu </span>
+                <span className="text-red-600 font-bold">não são "realidade".</span>
+                <br />
+                <span className="text-gray-900">São </span>
+                <span className="text-red-600 font-bold text-2xl md:text-3xl">preços inflados</span>
+                <span className="text-gray-900">, porque o mercado sabe que </span>
+                <span className="text-orange-600 font-bold">"noiva não economiza"</span>
+                <span className="text-gray-900">.</span>
+              </p>
+
+              <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 border-l-4 border-green-500 mb-8">
+                <p className="text-2xl md:text-3xl lg:text-4xl text-center font-bold text-green-700 mb-4">
+                  Mas isso muda hoje.
+                </p>
+                <p className="text-lg md:text-xl lg:text-2xl text-gray-800 leading-relaxed text-center">
+                  <span className="text-gray-900">Você vai aprender como escolher </span>
+                  <span className="text-pink-600 font-semibold">fornecedores certos</span>
+                  <span className="text-gray-900">, </span>
+                  <span className="text-purple-600 font-semibold">datas estratégicas</span>
+                  <span className="text-gray-900"> e </span>
+                  <span className="text-blue-600 font-semibold">truques internos</span>
+                  <span className="text-gray-900"> que reduzem os custos em até </span>
+                  <span className="text-green-600 font-bold text-3xl md:text-4xl">80%</span>
+                  <span className="text-gray-900">, </span>
+                  <span className="text-green-700 font-bold">sem perder a qualidade</span>
+                  <span className="text-gray-900">.</span>
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* GRANDE PROMESSA */}
+        {/* O MÉTODO CASAMENTO ECONÔMICO */}
         <section className="py-16 px-4 bg-pink-50">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              E se eu te falar que é possível ter um casamento completo por menos de 7 mil reais sem perder a qualidade?
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-center mb-12">
+              <span className="text-pink-600">💌</span>{' '}
+              <span className="text-gray-900">O MÉTODO CASAMENTO ECONÔMICO</span>
             </h2>
-            <div className="text-lg md:text-xl text-gray-700 space-y-4 leading-relaxed">
-              <p>
-                E o melhor, você não precisa abrir mão de ter aquele lindo vestido, um cardápio delicioso para seus convidados ou daquela linda fotografia e filmagem.
+
+            <div className="space-y-6 mb-10">
+              <div className="flex items-start gap-4">
+                <span className="text-green-600 text-4xl flex-shrink-0 font-bold">✓</span>
+                <p className="text-xl md:text-2xl lg:text-3xl text-gray-900 font-semibold leading-relaxed">
+                  Como <span className="text-pink-600 font-bold">organizar tudo do zero</span> sem assessoria
+                </p>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <span className="text-green-600 text-4xl flex-shrink-0 font-bold">✓</span>
+                <p className="text-xl md:text-2xl lg:text-3xl text-gray-900 font-semibold leading-relaxed">
+                  Como montar um <span className="text-orange-600 font-bold">buffet econômico e delicioso</span>
+                </p>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <span className="text-green-600 text-4xl flex-shrink-0 font-bold">✓</span>
+                <p className="text-xl md:text-2xl lg:text-3xl text-gray-900 font-semibold leading-relaxed">
+                  Como escolher o <span className="text-purple-600 font-bold">melhor dia e horário</span> pra economizar
+                </p>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <span className="text-green-600 text-4xl flex-shrink-0 font-bold">✓</span>
+                <p className="text-xl md:text-2xl lg:text-3xl text-gray-900 font-semibold leading-relaxed">
+                  Como <span className="text-blue-600 font-bold">negociar com fornecedores</span> sem parecer "pão dura"
+                </p>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <span className="text-green-600 text-4xl flex-shrink-0 font-bold">✓</span>
+                <p className="text-xl md:text-2xl lg:text-3xl text-gray-900 font-semibold leading-relaxed">
+                  Como montar o <span className="text-rose-600 font-bold">enxoval da casa nova</span> gastando quase nada
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-12 text-center">
+              <p className="text-xl md:text-2xl lg:text-3xl text-gray-900 leading-relaxed font-semibold">
+                <span className="text-gray-900">E o melhor: </span>
+                <span className="text-green-700 font-bold">sem precisar abrir mão da beleza, da emoção</span>
+                <span className="text-gray-900"> e da </span>
+                <span className="text-pink-600 font-bold">festa dos sonhos</span>
+                <span className="text-gray-900">.</span>
               </p>
-              <p>
-                Tudo o que você precisa fazer é seguir o método de quem realmente entende os segredos desse mercado!
-              </p>
-              <p>
-                É claro que o sucesso de uma festa envolve vários fatores pra ter uma boa organização.
-              </p>
-              <p className="font-bold text-2xl text-rose-600">
-                Mas essa é a melhor parte! Pois nós vamos te ensinar a..
-              </p>
-              <p className="text-3xl font-bold text-gray-900 uppercase">
-                ECONOMIZAR E ORGANIZAR TUDO DO ZERO!
-              </p>
+            </div>
+
+            {/* Carrossel de Depoimentos */}
+            <div className="mt-16 max-w-4xl mx-auto">
+              <TestimonialsCarousel />
             </div>
           </div>
         </section>
@@ -274,18 +485,38 @@ export default function Home() {
           </div>
         </section>
 
-        {/* PROVA/AUTORIDADE */}
-        <section className="py-16 px-4 bg-white">
-          <div className="max-w-3xl mx-auto text-center text-lg md:text-xl text-gray-700 space-y-6">
-            <p className="text-xl md:text-2xl leading-relaxed">
-              Esse é exatamente o <strong className="text-2xl md:text-3xl text-rose-600">MESMO processo</strong> que eu e minhas noivinhas usamos para fazer <strong className="text-xl md:text-2xl">casamentos dos sonhos por menos de 7K reais.</strong>
-            </p>
-            <p className="text-xl md:text-2xl leading-relaxed">
-              Esse é um processo que apesar de ser muito valioso e secreto é <strong className="text-2xl md:text-3xl text-green-600">MUITO SIMPLES</strong> de ser replicado.
-            </p>
-            <p className="text-xl md:text-2xl leading-relaxed">
-              E ainda, você poderá fazer isso <strong className="text-xl md:text-2xl underline">sem precisar de nenhum conhecimento</strong> na área de eventos.
-            </p>
+        {/* URGÊNCIA E CTA FINAL */}
+        <section className="py-16 px-4 bg-gradient-to-br from-red-50 to-orange-50">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-red-500">
+              <div className="mb-6">
+                <span className="text-8xl md:text-9xl">⚠️</span>
+              </div>
+
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-8">
+                <span className="text-red-600">ÚLTIMO DIA COM ESSE PREÇO!</span>
+              </h2>
+
+              <div className="space-y-6 mb-10">
+                <p className="text-lg md:text-xl lg:text-2xl text-gray-900 leading-relaxed font-semibold">
+                  <span className="text-gray-900">Depois que encerrar, o acesso volta ao valor original de </span>
+                  <span className="text-red-600 font-bold text-2xl md:text-3xl">R$97</span>
+                  <span className="text-gray-900">.</span>
+                </p>
+
+                <p className="text-lg md:text-xl lg:text-2xl text-gray-800 leading-relaxed italic">
+                  Não espere o "momento perfeito". <span className="text-pink-600 font-bold not-italic">Ele é criado por você.</span>
+                </p>
+              </div>
+
+              <a
+                href="#oferta"
+                className="inline-block bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700 text-white font-bold py-6 px-12 rounded-full text-lg md:text-xl transition-all transform hover:scale-105 shadow-2xl"
+              >
+                <span className="text-4xl md:text-5xl align-middle">💗</span>{' '}
+                <span className="align-middle">QUERO VIVER MEU CASAMENTO DOS SONHOS SEM ME ENDIVIDAR!</span>
+              </a>
+            </div>
           </div>
         </section>
 
@@ -525,6 +756,21 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="p-8">
+                  {/* Descrição do plano */}
+                  <div className="mb-6 text-center">
+                    <p className="text-lg text-gray-800 font-semibold mb-3">
+                      Ideal pra quem quer começar <span className="text-green-600 font-bold">AGORA</span> com o essencial.
+                    </p>
+                  </div>
+
+                  {/* Box de destaque */}
+                  <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r-lg">
+                    <p className="text-base text-gray-800">
+                      <span className="text-2xl align-middle">💡</span>{' '}
+                      <span className="font-semibold">Perfeito pra noivas que estão começando a se organizar e precisam economizar desde já.</span>
+                    </p>
+                  </div>
+
                   <ul className="space-y-4 mb-8">
                     <li className="flex items-start">
                       <span className="text-green-500 mr-3 text-xl flex-shrink-0">✓</span>
@@ -775,8 +1021,8 @@ export default function Home() {
         {/* FOOTER SIMPLES */}
         <footer className="bg-gray-900 text-white py-8 px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <p className="text-sm">© 2024 Casamento Econômico. Todos os direitos reservados.</p>
-            <p className="text-sm mt-2 text-gray-400">@casamentoeconomico_</p>
+            <p className="text-sm">© 2025 Casamento Econômico. Todos os direitos reservados.</p>
+            <p className="text-sm mt-2 text-gray-400">@casamento_economia</p>
           </div>
         </footer>
       </div>
